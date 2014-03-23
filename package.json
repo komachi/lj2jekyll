@@ -1,0 +1,33 @@
+{
+  "name": "lj2jekyll",
+  "version": "0.0.1",
+  "preferGlobal": true,
+  "description": "Move your LiveJournal blog to Jekyll.",
+  "main": "lj2jekyll.js",
+  "bin": {
+    "lj2jekyll": "bin/lj2jekyll"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/komachi/lj2jekyll.git"
+  },
+  "keywords": [
+    "jekyll",
+    "livejournal",
+    "blog",
+    "convert"
+  ],
+  "author": "Anton Nesterov",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/komachi/lj2jekyll/issues"
+  },
+  "dependencies": {
+    "cli": "^0.4.5",
+    "livejournal": "0.0.4",
+    "html-entities": "^1.0.10"
+  }
+}
