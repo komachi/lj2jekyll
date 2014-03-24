@@ -5,19 +5,25 @@ Entities = require('html-entities').AllHtmlEntities,
 entities = new Entities();
 
 cli.parse({
-  username: ['u', 'Username', 'string'],
-  path: ['p', 'Jekyll blog location', 'path']
+  name: ['n', 'Username', 'string'],
+  path: ['p', 'Jekyll blog location', 'path'],
+  update: ['u', 'Download latest N blog posts (max 50)', 'number']
 });
 
 
 cli.main(function(args, options) {
-  if (!options.username) {
+  if (!options.name) {
     cli.fatal('You must specify username.');
   }
-  if (!options.username) {
+  if (!options.path) {
     cli.fatal('You must specify path.');
   }
-  downloadPosts(options.username,options.path);
+  if(options.update) {
+    updatePosts(options.name,options.path,options.update);
+  }
+  else {
+    downloadPosts(options.name,options.path);
+  }
 });
 
 function downloadPosts(username,path,beforedate) {
@@ -34,23 +40,40 @@ function downloadPosts(username,path,beforedate) {
     if (value.events[49]) {
       downloadPosts(username,path,value.events[49].eventtime)
     }
-    savePosts(value.events,path);
+    for (i in value.events) {
+      savePost(value.events[i],path);
+    }
   });
 }
 
-function savePosts(events,path) {
-  for (i in events) {
-    if (events[i].subject) {
-      var title = entities.encode(events[i].subject);
-    }
-    var post = '---\n' +
-      'layout: post\n' +
-      'title: "' + title + '"\n' +
-      'date: ' + events[i].eventtime + '\n' +
-      '---\n' + events[i].event;
-    console.log(events[i].ditemid);
-    fs.writeFile(path + '/_posts/' + events[i].eventtime.substring(0,10) + '-' + events[i].ditemid + '.html', post, function (err) {
-      if (err) throw err;
-    });
+function savePost(event,path) {
+  if (event.subject) {
+    var title = entities.encode(event.subject);
   }
+  var post = '---\n' +
+    'layout: post\n' +
+    'title: "' + title + '"\n' +
+    'date: ' + event.eventtime + '\n' +
+    '---\n' + event.event;
+  console.log(event.ditemid);
+  fs.writeFile(path + '/_posts/' + event.eventtime.substring(0,10) + '-' + event.ditemid + '.html', post, function (err) {
+    if (err) throw err;
+  });
+}
+
+function updatePosts(username,path,howmany) {
+  var params = {
+    journal: username,
+    auth_method: 'noauth',
+    selecttype: 'lastn',
+    howmany: howmany
+  };
+  LiveJournal.RPC.getevents(params, function(err, value) {
+    for (i in value.events) {
+      var postpath = path + '/_posts/' + value.events[i].eventtime.substring(0,10) + '-' + value.events[i].ditemid + '.html';
+      if (!fs.existsSync(postpath)) {
+        savePost(value.events[i],path);
+      }
+    }
+  });
 }

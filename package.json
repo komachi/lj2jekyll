@@ -1,6 +1,6 @@
 {
   "name": "lj2jekyll",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "preferGlobal": true,
   "description": "Move your LiveJournal blog to Jekyll.",
   "main": "lj2jekyll.js",

@@ -9,9 +9,10 @@ Move your LiveJournal blog to Jekyll.
     Usage:
       lj2jekyll [OPTIONS] [ARGS]
 
-    Options: 
-      -u, --username STRING  Username
+    Options:
+      -n, --name STRING      Username
       -p, --path PATH        Jekyll blog location
+      -u, --update NUMBER    Download latest N blog posts (max 50)
       -k, --no-color         Omit color from output
           --debug            Show debug information
       -h, --help             Display help and usage details
